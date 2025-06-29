@@ -17,12 +17,15 @@ export async function processImageWithGPT4o(base64Image) {
             },
             {
               type: 'text',
-              text: 'Extrae todos los datos relevantes de esta tabla en formato JSON estructurado. Claves esperadas: producto, lote, cantidad, motivo, responsable, turno.',
+              text:
+                'Analiza la tabla de la imagen y extrae su contenido. Este tipo de tablas suele incluir columnas como "Producto/Preparación/Material Auxiliar/Materia Prima", "Lote MMP/Lote Interno/Número de Carro", "Cantidad (kg)", "Descripción del motivo de merma", "Responsable" y "Turno". Devuelve únicamente un arreglo JSON de objetos utilizando las claves: producto, lote, cantidad, motivo, responsable y turno. No incluyas texto adicional.',
             },
           ],
         },
       ],
       max_tokens: 1000,
+      temperature: 0,
+      response_format: { type: 'json_object' },
     },
     {
       headers: {
