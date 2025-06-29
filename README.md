@@ -31,6 +31,12 @@ Ejecuta el bot con Node.js:
 node src/bot.js
 ```
 
+O con el script de npm:
+
+```bash
+npm start
+```
+
 Una vez en funcionamiento, envíale al bot una foto que contenga una tabla. El bot enviará un mensaje de confirmación mientras procesa la imagen.
 
 - Si los datos se reconocen como una colección de objetos, el bot generará un archivo `datos.xlsx` con la información estructurada.
