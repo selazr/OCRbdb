@@ -32,5 +32,10 @@ export async function processImageWithGPT4o(base64Image) {
     }
   );
 
-  return response.data.choices[0].message.content;
+  const result = response.data.choices[0].message.content;
+  try {
+    return JSON.parse(result);
+  } catch (err) {
+    return result;
+  }
 }
