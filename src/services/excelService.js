@@ -13,14 +13,17 @@ export async function generateExcelFromData(data) {
     { header: 'Turno', key: 'turno', width: 10 }
   ];
 
-  worksheet.addRow({
-    producto: data.producto || '',
-    lote: data.lote || '',
-    cantidad: data.cantidad || '',
-    motivo: data.motivo || '',
-    responsable: data.responsable || '',
-    turno: data.turno || ''
-  });
+  const rows = Array.isArray(data) ? data : [data];
+  rows.forEach((row) =>
+    worksheet.addRow({
+      producto: row.producto || '',
+      lote: row.lote || '',
+      cantidad: row.cantidad || '',
+      motivo: row.motivo || '',
+      responsable: row.responsable || '',
+      turno: row.turno || '',
+    })
+  );
 
   return workbook.xlsx.writeBuffer();
 }
