@@ -4,6 +4,7 @@ dotenv.config();
 import TelegramBot from 'node-telegram-bot-api';
 import axios from 'axios';
 import { processImageWithGPT4o } from './services/openaiService.js';
+import { generateExcelFromData } from './services/excelService.js';
 
 const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN, { polling: true });
 
@@ -22,7 +23,21 @@ bot.on('message', async (msg) => {
       const base64 = Buffer.from(response.data).toString('base64');
       const result = await processImageWithGPT4o(base64);
 
-      bot.sendMessage(chatId, `📋 Datos extraídos:\n\n${result}`);
+      if (typeof result === 'object') {
+        const buffer = await generateExcelFromData(result);
+        await bot.sendDocument(
+          chatId,
+          buffer,
+          {},
+          {
+            filename: 'datos.xlsx',
+            contentType:
+              'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+          }
+        );
+      } else {
+        bot.sendMessage(chatId, `📋 Datos extraídos:\n\n${result}`);
+      }
     } catch (error) {
       console.error(error);
       bot.sendMessage(chatId, '❌ Error al procesar la imagen.');
