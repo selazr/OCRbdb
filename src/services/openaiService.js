@@ -43,3 +43,36 @@ export async function processImageWithGPT4o(base64Image) {
     return result;
   }
 }
+
+export async function analyzeTableTextWithGPT4o(ocrText) {
+  const response = await axios.post(
+    'https://api.openai.com/v1/chat/completions',
+    {
+      model: 'gpt-4o',
+      messages: [
+        {
+          role: 'user',
+          content:
+            'Corrige y estructura el siguiente texto reconocido por OCR. Devuelve únicamente un arreglo JSON de objetos con las claves: producto, lote, cantidad, motivo, responsable y turno.\n\n' +
+            ocrText,
+        },
+      ],
+      max_tokens: 1000,
+      temperature: 0,
+      response_format: { type: 'json_object' },
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  );
+
+  const result = response.data.choices[0].message.content;
+  try {
+    return JSON.parse(result);
+  } catch (err) {
+    return result;
+  }
+}
