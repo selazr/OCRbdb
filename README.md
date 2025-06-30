@@ -47,6 +47,7 @@ Una vez en funcionamiento, envíale al bot una foto que contenga una tabla. El b
 - `src/bot.js`: punto de entrada del bot de Telegram.
 - `src/services/openaiService.js`: se comunica con la API de OpenAI para procesar la imagen y extraer la información de la tabla.
 - `src/services/excelService.js`: genera un archivo Excel a partir de los datos obtenidos.
+- `src/services/tesseractService.js`: extrae texto de imágenes utilizando Tesseract.
 
 ## Variables de entorno
 
@@ -58,4 +59,29 @@ Una vez en funcionamiento, envíale al bot una foto que contenga una tabla. El b
 ## Licencia
 
 ISC
+
+## Usar Tesseract como motor OCR
+
+Si prefieres que el reconocimiento de texto se realice de manera local,
+puedes utilizar [Tesseract.js](https://github.com/naptha/tesseract.js).
+Instálalo con:
+
+```bash
+npm install tesseract.js
+```
+
+Luego emplea el servicio `tesseractService.js` para extraer el texto:
+
+```javascript
+import { processImageWithTesseract } from './src/services/tesseractService.js';
+
+const texto = await processImageWithTesseract(buffer, 'spa');
+```
+
+Flujo sugerido:
+
+1. Recibir la imagen desde Telegram u otra fuente.
+2. Pasarla a `processImageWithTesseract` para obtener el texto plano.
+3. Procesar ese texto según tus necesidades, por ejemplo generando el Excel
+   con `generateExcelFromData`.
 
