@@ -60,3 +60,11 @@ test('generateExcelFromData sets headers and rows', async () => {
   expect(ws.rows[0]).toEqual(sample);
   expect(workbook.xlsx.writeBuffer).toHaveBeenCalled();
 });
+
+test('generateExcelFromData skips null entries', async () => {
+  const sample = { producto: 'P' };
+  await generateExcelFromData([null, sample]);
+  const workbook = exceljs.default.__lastWorkbook;
+  const ws = workbook.worksheets[0];
+  expect(ws.rows).toEqual([sample]);
+});

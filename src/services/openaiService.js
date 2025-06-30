@@ -17,8 +17,8 @@ export async function processImageWithGPT4o(base64Image) {
             },
             {
               type: 'text',
-              text:
-                'Analiza la tabla de la imagen y extrae su contenido. Este tipo de tablas suele incluir columnas como "Producto/Preparación/Material Auxiliar/Materia Prima", "Lote MMP/Lote Interno/Número de Carro", "Cantidad (kg)", "Descripción del motivo de merma", "Responsable" y "Turno". Devuelve únicamente un arreglo JSON de objetos utilizando las claves: producto, lote, cantidad, motivo, responsable y turno. No incluyas texto adicional.',
+          text:
+            'Analiza la tabla de la imagen y extrae su contenido. Este tipo de tablas suele incluir columnas como "Producto/Preparación/Material Auxiliar/Materia Prima", "Lote MMP/Lote Interno/Número de Carro", "Cantidad (kg)", "Descripción del motivo de merma", "Responsable" y "Turno".\n\nPresta especial atención a la columna "Descripción del motivo de merma"; dedica tiempo extra a revisarla y detallar este campo con la mayor precisión posible, ya que suele presentar el mayor margen de error. Devuelve únicamente un arreglo JSON de objetos utilizando las claves: producto, lote, cantidad, motivo, responsable y turno. No incluyas texto adicional.',
             },
           ],
         },
