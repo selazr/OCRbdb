@@ -45,7 +45,7 @@ Una vez en funcionamiento, envíale al bot una foto que contenga una tabla. El b
 ## Estructura del proyecto
 
 - `src/bot.js`: punto de entrada del bot de Telegram.
-- `src/services/openaiService.js`: se comunica con la API de OpenAI para procesar la imagen y extraer la información de la tabla.
+- `src/services/openaiService.js`: se comunica con la API de OpenAI para procesar la imagen o el texto extraído y obtener la información estructurada.
 - `src/services/excelService.js`: genera un archivo Excel a partir de los datos obtenidos.
 - `src/services/tesseractService.js`: extrae texto de imágenes utilizando Tesseract.
 
@@ -74,14 +74,16 @@ Luego emplea el servicio `tesseractService.js` para extraer el texto:
 
 ```javascript
 import { processImageWithTesseract } from './src/services/tesseractService.js';
+import { analyzeTableTextWithGPT4o } from './src/services/openaiService.js';
 
 const texto = await processImageWithTesseract(buffer, 'spa');
+const datos = await analyzeTableTextWithGPT4o(texto);
 ```
 
 Flujo sugerido:
 
 1. Recibir la imagen desde Telegram u otra fuente.
 2. Pasarla a `processImageWithTesseract` para obtener el texto plano.
-3. Procesar ese texto según tus necesidades, por ejemplo generando el Excel
-   con `generateExcelFromData`.
+3. Enviar el texto a `analyzeTableTextWithGPT4o` para corregirlo y estructurarlo.
+4. Generar el Excel con `generateExcelFromData` usando los datos devueltos.
 

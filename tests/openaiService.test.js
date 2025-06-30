@@ -5,11 +5,12 @@ jest.unstable_mockModule('axios', () => ({
 }));
 
 let processImageWithGPT4o;
+let analyzeTableTextWithGPT4o;
 let axios;
 
 beforeAll(async () => {
   ({ default: axios } = await import('axios'));
-  ({ processImageWithGPT4o } = await import('../src/services/openaiService.js'));
+  ({ processImageWithGPT4o, analyzeTableTextWithGPT4o } = await import('../src/services/openaiService.js'));
 });
 
 describe('processImageWithGPT4o', () => {
@@ -26,6 +27,24 @@ describe('processImageWithGPT4o', () => {
   test('returns raw string when JSON parse fails', async () => {
     axios.post.mockResolvedValue({ data: { choices: [{ message: { content: 'not json' } }] } });
     const result = await processImageWithGPT4o('img');
+    expect(result).toBe('not json');
+  });
+});
+
+describe('analyzeTableTextWithGPT4o', () => {
+  beforeEach(() => {
+    axios.post.mockReset();
+  });
+
+  test('parses JSON response', async () => {
+    axios.post.mockResolvedValue({ data: { choices: [{ message: { content: '{"a":1}' } }] } });
+    const result = await analyzeTableTextWithGPT4o('txt');
+    expect(result).toEqual({ a: 1 });
+  });
+
+  test('returns raw string when JSON parse fails', async () => {
+    axios.post.mockResolvedValue({ data: { choices: [{ message: { content: 'not json' } }] } });
+    const result = await analyzeTableTextWithGPT4o('txt');
     expect(result).toBe('not json');
   });
 });
