@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 export async function processImageWithGPT4o(base64Image) {
+  console.log('Enviando imagen a OpenAI...');
   const response = await axios.post(
     'https://api.openai.com/v1/chat/completions',
     {
@@ -37,6 +38,7 @@ export async function processImageWithGPT4o(base64Image) {
   );
 
   const result = response.data.choices[0].message.content;
+  console.log('Respuesta de OpenAI:', result);
   try {
     return JSON.parse(result);
   } catch (err) {
@@ -45,6 +47,7 @@ export async function processImageWithGPT4o(base64Image) {
 }
 
 export async function analyzeTableTextWithGPT4o(ocrText) {
+  console.log('Enviando texto a OpenAI...', ocrText);
   const response = await axios.post(
     'https://api.openai.com/v1/chat/completions',
     {
@@ -70,6 +73,7 @@ export async function analyzeTableTextWithGPT4o(ocrText) {
   );
 
   const result = response.data.choices[0].message.content;
+  console.log('Respuesta de OpenAI:', result);
   try {
     return JSON.parse(result);
   } catch (err) {
