@@ -15,7 +15,8 @@
     "axios": "^1.10.0",
     "dotenv": "^17.0.0",
     "exceljs": "^4.4.0",
-    "node-telegram-bot-api": "^0.66.0"
+    "node-telegram-bot-api": "^0.66.0",
+    "tesseract.js": "^4.0.2"
   },
   "devDependencies": {
     "@jest/globals": "^29.7.0",
