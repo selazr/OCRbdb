@@ -16,16 +16,9 @@ export async function generateExcelFromData(data) {
   const rows = Array.isArray(data) ? data : [data];
   rows
     .filter((row) => row && typeof row === 'object')
-    .forEach((row) =>
-      worksheet.addRow({
-        producto: row.producto || '',
-        lote: row.lote || '',
-        cantidad: row.cantidad || '',
-        motivo: row.motivo || '',
-        responsable: row.responsable || '',
-        turno: row.turno || '',
-      })
-    );
+    .forEach((row) => {
+      worksheet.addRow(row);
+    });
 
   return workbook.xlsx.writeBuffer();
 }
