@@ -1,6 +1,6 @@
 # OCRbdb
 
-Este proyecto es un bot de Telegram que analiza imágenes de tablas, extrae su contenido utilizando OpenAI GPT-4o y entrega los datos resultantes ya sea en texto o en un archivo Excel.
+Este proyecto es un bot de Telegram que analiza imágenes de tablas. Primero extrae el texto de la imagen con Tesseract y luego utiliza OpenAI GPT-4o para estructurar los datos, ya sea en texto o en un archivo Excel.
 
 ## Requisitos previos
 
@@ -62,15 +62,9 @@ ISC
 
 ## Usar Tesseract como motor OCR
 
-Si prefieres que el reconocimiento de texto se realice de manera local,
-puedes utilizar [Tesseract.js](https://github.com/naptha/tesseract.js).
-Instálalo con:
-
-```bash
-npm install tesseract.js
-```
-
-Luego emplea el servicio `tesseractService.js` para extraer el texto:
+El bot emplea Tesseract de forma predeterminada para reconocer el texto de las imágenes.
+Si necesitas utilizar este servicio en otro contexto o modificar el idioma, puedes importar
+`processImageWithTesseract` desde `tesseractService.js`:
 
 ```javascript
 import { processImageWithTesseract } from './src/services/tesseractService.js';
@@ -80,10 +74,10 @@ const texto = await processImageWithTesseract(buffer, 'spa');
 const datos = await analyzeTableTextWithGPT4o(texto);
 ```
 
-Flujo sugerido:
+El flujo es el mismo que usa el bot:
 
-1. Recibir la imagen desde Telegram u otra fuente.
-2. Pasarla a `processImageWithTesseract` para obtener el texto plano.
-3. Enviar el texto a `analyzeTableTextWithGPT4o` para corregirlo y estructurarlo.
-4. Generar el Excel con `generateExcelFromData` usando los datos devueltos.
+1. Obtener la imagen.
+2. Ejecutar `processImageWithTesseract` para extraer el texto plano.
+3. Enviar ese texto a `analyzeTableTextWithGPT4o` para corregirlo y estructurarlo.
+4. Generar un Excel con `generateExcelFromData` si es necesario.
 

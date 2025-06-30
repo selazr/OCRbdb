@@ -3,8 +3,9 @@ dotenv.config();
 
 import TelegramBot from 'node-telegram-bot-api';
 import axios from 'axios';
-import { processImageWithGPT4o } from './services/openaiService.js';
+import { analyzeTableTextWithGPT4o } from './services/openaiService.js';
 import { generateExcelFromData } from './services/excelService.js';
+import { processImageWithTesseract } from './services/tesseractService.js';
 
 const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN, { polling: true });
 
@@ -22,9 +23,10 @@ bot.on('message', async (msg) => {
 
     try {
       const response = await axios.get(url, { responseType: 'arraybuffer' });
-      const base64 = Buffer.from(response.data).toString('base64');
-      console.log('Tamaño de la imagen en base64:', base64.length);
-      const result = await processImageWithGPT4o(base64);
+      const imageBuffer = Buffer.from(response.data);
+      console.log('Tamaño de la imagen (bytes):', imageBuffer.length);
+      const text = await processImageWithTesseract(imageBuffer, 'spa');
+      const result = await analyzeTableTextWithGPT4o(text);
       console.log('Datos devueltos por OpenAI:', result);
 
       if (typeof result === 'object') {
