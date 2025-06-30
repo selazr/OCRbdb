@@ -14,16 +14,18 @@ export async function generateExcelFromData(data) {
   ];
 
   const rows = Array.isArray(data) ? data : [data];
-  rows.forEach((row) =>
-    worksheet.addRow({
-      producto: row.producto || '',
-      lote: row.lote || '',
-      cantidad: row.cantidad || '',
-      motivo: row.motivo || '',
-      responsable: row.responsable || '',
-      turno: row.turno || '',
-    })
-  );
+  rows
+    .filter((row) => row && typeof row === 'object')
+    .forEach((row) =>
+      worksheet.addRow({
+        producto: row.producto || '',
+        lote: row.lote || '',
+        cantidad: row.cantidad || '',
+        motivo: row.motivo || '',
+        responsable: row.responsable || '',
+        turno: row.turno || '',
+      })
+    );
 
   return workbook.xlsx.writeBuffer();
 }
