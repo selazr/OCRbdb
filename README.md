@@ -62,20 +62,17 @@ ISC
 
 ## Procesamiento de PDF
 
-El bot emplea `pdf-parse` para extraer el texto de los documentos PDF recibidos. Posteriormente, envía ese texto a `analyzeTableTextWithGPT4o` para obtener los datos estructurados. Si necesitas usar este flujo de manera independiente:
+El bot emplea `pdf-parse` para extraer el texto de los documentos PDF recibidos. Luego puedes pasar ese texto a `analyzeTableTextWithGPT4o` o utilizar directamente `processPDFWithGPT4o`. Si necesitas usar este flujo de manera independiente:
 
 ```javascript
-import { extractTextFromPDF } from './src/services/pdfService.js';
-import { analyzeTableTextWithGPT4o } from './src/services/openaiService.js';
+import { processPDFWithGPT4o } from './src/services/openaiService.js';
 
-const texto = await extractTextFromPDF(buffer);
-const datos = await analyzeTableTextWithGPT4o(texto);
+const datos = await processPDFWithGPT4o(buffer);
 ```
 
 Los pasos del bot son los siguientes:
 
 1. Obtener el PDF.
-2. Extraer su texto con `extractTextFromPDF`.
-3. Enviar ese texto a `analyzeTableTextWithGPT4o` para corregirlo y estructurarlo.
-4. Generar un Excel con `generateExcelFromData` si es necesario.
+2. Extraer su texto con `extractTextFromPDF` y pasarlo a `analyzeTableTextWithGPT4o`, o usar `processPDFWithGPT4o` directamente.
+3. Generar un Excel con `generateExcelFromData` si es necesario.
 

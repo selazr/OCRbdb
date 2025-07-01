@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { extractTextFromPDF } from './pdfService.js';
 
 export async function processImageWithGPT4o(base64Image) {
   console.log('Enviando imagen a OpenAI...');
@@ -79,4 +80,9 @@ export async function analyzeTableTextWithGPT4o(ocrText) {
   } catch (err) {
     return result;
   }
+}
+
+export async function processPDFWithGPT4o(pdfBuffer) {
+  const text = await extractTextFromPDF(pdfBuffer);
+  return analyzeTableTextWithGPT4o(text);
 }
