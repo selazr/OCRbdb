@@ -1,6 +1,6 @@
 # OCRbdb
 
-Este proyecto es un bot de Telegram que analiza imágenes de tablas. Primero extrae el texto de la imagen con Tesseract y luego utiliza OpenAI GPT-4o para estructurar los datos, ya sea en texto o en un archivo Excel.
+Este proyecto es un bot de Telegram que analiza tablas enviadas en formato PDF. Extrae el texto del PDF y luego utiliza OpenAI GPT-4o para estructurar los datos, ya sea en texto o en un archivo Excel.
 
 ## Requisitos previos
 
@@ -37,7 +37,7 @@ O con el script de npm:
 npm start
 ```
 
-Una vez en funcionamiento, envíale al bot una foto que contenga una tabla. El bot enviará un mensaje de confirmación mientras procesa la imagen.
+Una vez en funcionamiento, envíale al bot un archivo PDF que contenga la tabla. El bot enviará un mensaje de confirmación mientras procesa el documento.
 
 - Si los datos se reconocen como una colección de objetos, el bot generará un archivo `datos.xlsx` con la información estructurada.
 - En caso contrario, devolverá el texto extraído directamente en el chat.
@@ -47,7 +47,7 @@ Una vez en funcionamiento, envíale al bot una foto que contenga una tabla. El b
 - `src/bot.js`: punto de entrada del bot de Telegram.
 - `src/services/openaiService.js`: se comunica con la API de OpenAI para procesar la imagen o el texto extraído y obtener la información estructurada.
 - `src/services/excelService.js`: genera un archivo Excel a partir de los datos obtenidos.
-- `src/services/tesseractService.js`: extrae texto de imágenes utilizando Tesseract.
+- `src/services/pdfService.js`: extrae el texto de los archivos PDF recibidos.
 
 ## Variables de entorno
 
@@ -60,24 +60,22 @@ Una vez en funcionamiento, envíale al bot una foto que contenga una tabla. El b
 
 ISC
 
-## Usar Tesseract como motor OCR
+## Procesamiento de PDF
 
-El bot emplea Tesseract de forma predeterminada para reconocer el texto de las imágenes.
-Si necesitas utilizar este servicio en otro contexto o modificar el idioma, puedes importar
-`processImageWithTesseract` desde `tesseractService.js`:
+El bot emplea `pdf-parse` para extraer el texto de los documentos PDF recibidos. Posteriormente, envía ese texto a `analyzeTableTextWithGPT4o` para obtener los datos estructurados. Si necesitas usar este flujo de manera independiente:
 
 ```javascript
-import { processImageWithTesseract } from './src/services/tesseractService.js';
+import { extractTextFromPDF } from './src/services/pdfService.js';
 import { analyzeTableTextWithGPT4o } from './src/services/openaiService.js';
 
-const texto = await processImageWithTesseract(buffer, 'spa');
+const texto = await extractTextFromPDF(buffer);
 const datos = await analyzeTableTextWithGPT4o(texto);
 ```
 
-El flujo es el mismo que usa el bot:
+Los pasos del bot son los siguientes:
 
-1. Obtener la imagen.
-2. Ejecutar `processImageWithTesseract` para extraer el texto plano.
+1. Obtener el PDF.
+2. Extraer su texto con `extractTextFromPDF`.
 3. Enviar ese texto a `analyzeTableTextWithGPT4o` para corregirlo y estructurarlo.
 4. Generar un Excel con `generateExcelFromData` si es necesario.
 
