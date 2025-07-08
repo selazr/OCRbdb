@@ -26,13 +26,13 @@ describe('processImageWithGPT4o', () => {
 
   test('parses JSON response', async () => {
     axios.post.mockResolvedValue({ data: { choices: [{ message: { content: '{"a":1}' } }] } });
-    const result = await processImageWithGPT4o('img');
+    const result = await processImageWithGPT4o({ url: 'img' });
     expect(result).toEqual({ a: 1 });
   });
 
   test('returns raw string when JSON parse fails', async () => {
     axios.post.mockResolvedValue({ data: { choices: [{ message: { content: 'not json' } }] } });
-    const result = await processImageWithGPT4o('img');
+    const result = await processImageWithGPT4o({ url: 'img' });
     expect(result).toBe('not json');
   });
 });
