@@ -1,8 +1,9 @@
 import axios from 'axios';
 import { extractTextFromPDF } from './pdfService.js';
 
-export async function processImageWithGPT4o(base64Image) {
+export async function processImageWithGPT4o({ url, base64 } = {}) {
   console.log('Enviando imagen a OpenAI...');
+  const imageUrl = url || `data:image/jpeg;base64,${base64}`;
   const response = await axios.post(
     'https://api.openai.com/v1/chat/completions',
     {
@@ -14,7 +15,7 @@ export async function processImageWithGPT4o(base64Image) {
             {
               type: 'image_url',
               image_url: {
-                url: `data:image/jpeg;base64,${base64Image}`,
+                url: imageUrl,
               },
             },
             {
